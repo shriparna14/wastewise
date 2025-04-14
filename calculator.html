@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCalc - Waste Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --secondary: #27ae60;
+            --accent: #f1c40f;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--dark) 0%, #1a2533 100%);
+            color: var(--light);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .background-animation {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .calculator-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .calculator-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .calculator-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 20%, 
+                rgba(46, 204, 113, 0.1) 50%, 
+                transparent 80%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: block;
+            margin: 2rem auto;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .calculate-btn:hover::before {
+            left: 100%;
+        }
+
+        .result-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out;
+        }
+
+        .result-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .waste-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .suggestions-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .suggestion-item {
+            padding: 1rem;
+            margin: 1rem 0;
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: 5px;
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .waste-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation" id="particles"></div>
+    
+    <div class="container">
+        <div class="calculator-card">
+            <h2>♻️ ECO WASTE CALCULATOR</h2>
+            
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>🥤 Plastic Items/Day</label>
+                    <input type="number" id="plastic" min="0" placeholder="Enter number">
+                </div>
+                
+                <div class="input-group">
+                    <label>📄 Paper Waste (kg/Day)</label>
+                    <input type="number" id="paper" min="0" step="0.1" placeholder="Enter kg">
+                </div>
+                
+                <div class="input-group">
+                    <label>🍎 Organic Waste (kg/Day)</label>
+                    <input type="number" id="organic" min="0" step="0.1" placeholder="Enter kg">
+                </div>
+                
+                <div class="input-group">
+                    <label>🥫 Metal Cans/Day</label>
+                    <input type="number" id="metal" min="0" placeholder="Enter number">
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateWaste()">Calculate Impact</button>
+
+            <div class="result-section" id="result">
+                <!-- Results will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create background particles
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            for(let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = particle.style.height = 
+                    Math.random() * 10 + 5 + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particles.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        function calculateWaste() {
+            // Get input values
+            const inputs = {
+                plastic: parseFloat(document.getElementById('plastic').value) || 0,
+                paper: parseFloat(document.getElementById('paper').value) || 0,
+                organic: parseFloat(document.getElementById('organic').value) || 0,
+                metal: parseFloat(document.getElementById('metal').value) || 0
+            };
+
+            // Calculate totals
+            const daily = { ...inputs };
+            const weekly = {
+                plastic: inputs.plastic * 7,
+                paper: inputs.paper * 7,
+                organic: inputs.organic * 7,
+                metal: inputs.metal * 7
+            };
+            const monthly = {
+                plastic: inputs.plastic * 30,
+                paper: inputs.paper * 30,
+                organic: inputs.organic * 30,
+                metal: inputs.metal * 30
+            };
+
+            // Generate suggestions
+            const suggestions = [];
+            if(monthly.plastic > 50) suggestions.push(
+                `🚫 ${monthly.plastic} plastic items/month - Switch to reusable containers!`
+            );
+            if(monthly.paper > 20) suggestions.push(
+                `🌳 ${monthly.paper}kg paper/month - Go digital & recycle!`
+            );
+            if(monthly.organic > 60) suggestions.push(
+                `🍃 ${monthly.organic}kg organic/month - Start composting!`
+            );
+            if(monthly.metal > 30) suggestions.push(
+                `🔩 ${monthly.metal} metal cans/month - Recycle for reuse!`
+            );
+
+            // Build result HTML
+            const resultHTML = `
+                <div class="waste-stats">
+                    <div class="stat-card">
+                        <h3>DAILY</h3>
+                        <p>🥤 ${daily.plastic}</p>
+                        <p>📄 ${daily.paper}kg</p>
+                        <p>🍎 ${daily.organic}kg</p>
+                        <p>🥫 ${daily.metal}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>WEEKLY</h3>
+                        <p>🥤 ${weekly.plastic}</p>
+                        <p>📄 ${weekly.paper}kg</p>
+                        <p>🍎 ${weekly.organic}kg</p>
+                        <p>🥫 ${weekly.metal}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>MONTHLY</h3>
+                        <p>🥤 ${monthly.plastic}</p>
+                        <p>📄 ${monthly.paper}kg</p>
+                        <p>🍎 ${monthly.organic}kg</p>
+                        <p>🥫 ${monthly.metal}</p>
+                    </div>
+                </div>
+
+                ${suggestions.length ? `
+                <ul class="suggestions-list">
+                    <h3>♻️ Sustainability Tips</h3>
+                    ${suggestions.map((s, i) => `
+                        <li class="suggestion-item" style="animation-delay: ${i * 0.1}s">
+                            ${s}
+                        </li>
+                    `).join('')}
+                </ul>
+                ` : '<p class="suggestion-item">🎉 Great job! Your waste levels are sustainable!</p>'}
+            `;
+
+            // Display results
+            const resultSection = document.getElementById('result');
+            resultSection.innerHTML = resultHTML;
+            resultSection.classList.add('visible');
+
+            // Animate suggestion items
+            document.querySelectorAll('.suggestion-item').forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+        }
+    </script>
+</body>
+</html>

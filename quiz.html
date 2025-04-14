@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz - WasteWise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body.quiz-page {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-image: url('https://images.unsplash.com/photo-1503595856157-6c3d4729e4b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #00FF99;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #00FF99;
+    }
+
+    .quiz-container {
+      max-width: 900px;
+      background-color: rgba(0, 0, 0, 0.75);
+      margin: 3rem auto;
+      padding: 2rem 3rem;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #00ff9966;
+    }
+
+    .quiz-container h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #00FF99;
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-container p {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .question {
+      margin-bottom: 2rem;
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .question label {
+      display: block;
+      margin: 0.4rem 0;
+      cursor: pointer;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .question input[type="radio"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      background: #00FF99;
+      color: #000;
+      border: none;
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #00cc77;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .spinner {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .spinner div {
+      width: 18px;
+      height: 18px;
+      background-color: #00FF99;
+      border-radius: 100%;
+      display: inline-block;
+      animation: bouncedelay 1.4s infinite ease-in-out both;
+    }
+
+    .spinner div:nth-child(1) { animation-delay: -0.32s; }
+    .spinner div:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bouncedelay {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="quiz-page">
+  <header>
+    <div class="logo">WasteWise</div>
+    <nav>
+      <ul>
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#blog">Blog</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="quiz-container">
+    <h1>Test Your Waste IQ</h1>
+    <p>Answer these 10 questions to see how much you know!</p>
+
+    <form id="quiz-form" action="quiz.php" method="POST">
+      <div class="question">
+        <p>1. What percentage of plastic waste is recycled globally?</p>
+        <label><input type="radio" name="q1" value="a" required> a) 9%</label>
+        <label><input type="radio" name="q1" value="b"> b) 25%</label>
+        <label><input type="radio" name="q1" value="c"> c) 50%</label>
+        <label><input type="radio" name="q1" value="d"> d) 75%</label>
+      </div>
+
+      <div class="question">
+        <p>2. Which of the following materials is biodegradable?</p>
+        <label><input type="radio" name="q2" value="a" required> a) Plastic</label>
+        <label><input type="radio" name="q2" value="b"> b) Aluminum</label>
+        <label><input type="radio" name="q2" value="c"> c) Paper</label>
+        <label><input type="radio" name="q2" value="d"> d) Glass</label>
+      </div>
+
+      <div class="question">
+        <p>3. What does the “3Rs” stand for?</p>
+        <label><input type="radio" name="q3" value="a" required> a) Reuse, Recycle, Refuse</label>
+        <label><input type="radio" name="q3" value="b"> b) Reduce, Recycle, Reuse</label>
+        <label><input type="radio" name="q3" value="c"> c) Rebuild, Reuse, Renew</label>
+        <label><input type="radio" name="q3" value="d"> d) Reduce, Refuse, Recycle</label>
+      </div>
+
+      <div class="question">
+        <p>4. E-waste refers to:</p>
+        <label><input type="radio" name="q4" value="a" required> a) Environmental waste</label>
+        <label><input type="radio" name="q4" value="b"> b) Electronic waste</label>
+        <label><input type="radio" name="q4" value="c"> c) Energy waste</label>
+        <label><input type="radio" name="q4" value="d"> d) Emission waste</label>
+      </div>
+
+      <div class="question">
+        <p>5. Composting is a process of:</p>
+        <label><input type="radio" name="q5" value="a" required> a) Burning waste</label>
+        <label><input type="radio" name="q5" value="b"> b) Decomposing organic matter</label>
+        <label><input type="radio" name="q5" value="c"> c) Recycling plastic</label>
+        <label><input type="radio" name="q5" value="d"> d) Crushing glass</label>
+      </div>
+
+      <div class="question">
+        <p>6. What color bin is typically used for recyclable waste?</p>
+        <label><input type="radio" name="q6" value="a" required> a) Red</label>
+        <label><input type="radio" name="q6" value="b"> b) Green</label>
+        <label><input type="radio" name="q6" value="c"> c) Blue</label>
+        <label><input type="radio" name="q6" value="d"> d) Yellow</label>
+      </div>
+
+      <div class="question">
+        <p>7. Which gas is produced during the decomposition of organic waste?</p>
+        <label><input type="radio" name="q7" value="a" required> a) Oxygen</label>
+        <label><input type="radio" name="q7" value="b"> b) Methane</label>
+        <label><input type="radio" name="q7" value="c"> c) Carbon monoxide</label>
+        <label><input type="radio" name="q7" value="d"> d) Nitrogen</label>
+      </div>
+
+      <div class="question">
+        <p>8. Which of the following is the best way to manage plastic waste?</p>
+        <label><input type="radio" name="q8" value="a" required> a) Burning it</label>
+        <label><input type="radio" name="q8" value="b"> b) Landfilling</label>
+        <label><input type="radio" name="q8" value="c"> c) Reusing and recycling</label>
+        <label><input type="radio" name="q8" value="d"> d) Dumping in water bodies</label>
+      </div>
+
+      <div class="question">
+        <p>9. Which waste takes the longest to decompose?</p>
+        <label><input type="radio" name="q9" value="a" required> a) Paper</label>
+        <label><input type="radio" name="q9" value="b"> b) Cotton</label>
+        <label><input type="radio" name="q9" value="c"> c) Plastic</label>
+        <label><input type="radio" name="q9" value="d"> d) Banana peel</label>
+      </div>
+
+      <div class="question">
+        <p>10. What is the primary benefit of waste segregation?</p>
+        <label><input type="radio" name="q10" value="a" required> a) Easier burning</label>
+        <label><input type="radio" name="q10" value="b"> b) Efficient recycling</label>
+        <label><input type="radio" name="q10" value="c"> c) Cost increase</label>
+        <label><input type="radio" name="q10" value="d"> d) Bad smell control</label>
+      </div>
+
+      <button type="submit" class="btn">See Your Score</button>
+      <div class="spinner" id="loading-spinner87">
+        <div></div><div></div><div></div>
+      </div>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 WasteWise | Created by Sachin K23 DH | Contact: 12316496</p>
+  </footer>
+
+  <script>
+    document.getElementById('quiz-form').addEventListener('submit', function () {
+      document.getElementById('loading-spinner').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
